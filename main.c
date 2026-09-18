@@ -1,13 +1,14 @@
 /* main.c */
 #include "Image.h"
 #include "Constants.h"
-#include "Palettes.h"
+#include "Palette.h"
 #include "Box.h"
 #include "Textbox.h"
 #include "Font.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-int main(int argc, char** argv)
+int main(void)
 {
 	int error_status = FAILED;
 	int width = 640;
@@ -25,7 +26,7 @@ int main(int argc, char** argv)
 		return error_status;
 	}
 
-	struct Font_Param font1_param = { .name = ".\\DroidSans.ttf" };
+	struct Font_Param font1_param = { .name = "DroidSans.ttf" };
 	Font* font1 = Font_create(&font1_param);
 
 	if (font1 == 0)
@@ -43,7 +44,10 @@ int main(int argc, char** argv)
 
 	struct Textbox_Param textbox1_param = {
 		.x = 120, .y = 100, .text = "hello",
-		.font = font1, .font_size = 24.0f
+		.font = font1, .font_size = 24.0f,
+		.r = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_R,
+		.g = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_G,
+		.b = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_B
 	};
 
 	Object* box1 = Box_create(&box1_param);

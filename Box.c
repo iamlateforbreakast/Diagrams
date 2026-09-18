@@ -8,14 +8,14 @@
 
 #include <stdlib.h>
 
-Object *Box_create(const void *params)
+Object *Box_create(const struct Box_Param *params)
 {
   Object *self = (Object*)calloc(1, sizeof(Object));
 
   if (self == 0) return 0;
 
   self->type = BOX_TYPE;
-  self->properties = (const struct BoxParam*)params;
+  self->properties = params;
   self->parent = 0;
   self->children = 0;
   self->destroy = Box_destroy;
@@ -39,7 +39,7 @@ void Box_add(Object* self, Object* child)
 
 void Box_draw(Object *self)
 {
-  struct Box_Param* p = (const struct Box_Param*)self->properties;
+  const struct Box_Param* p = (const struct Box_Param*)self->properties;
   int x = p->x;
   int y = p->y;
   int w = p->w;

@@ -1,0 +1,5 @@
+build/
+diagrams
+*.o
+*.d
+test.png

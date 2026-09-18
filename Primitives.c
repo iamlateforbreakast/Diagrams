@@ -71,7 +71,12 @@ void draw_line(Object* obj, int x0, int y0, int x1, int y1, int r, int g, int b)
     }
 }
 
-void draw_text(Object* obj, Font* font, float size, int x, int y, const char* text)
+static unsigned char blend_channel(unsigned char dst, int src, float alpha)
+{
+    return (unsigned char)(dst * (1.0f - alpha) + src * alpha + 0.5f);
+}
+
+void draw_text(Object* obj, Font* font, float size, int x, int y, const char* text, int r, int g, int b)
 {
     unsigned char* drawing_buffer = Object_getDrawingBuffer(obj);
     int buffer_height = Object_getBufferHeight(obj);
@@ -94,20 +99,22 @@ void draw_text(Object* obj, Font* font, float size, int x, int y, const char* te
             int x_offset = x + c_x1;
 
             // Blit
-            for (int r = 0; r < bh; r++)
+            for (int row = 0; row < bh; row++)
             {
                 for (int c = 0; c < bw; c++)
                 {
-                    int img_y = y_offset + r;
+                    int img_y = y_offset + row;
                     int img_x = x_offset + c;
 
                     if (img_x >= 0 && img_x < IMG_WIDTH && img_y >= 0 && img_y < buffer_height)
                     {
                         int img_idx = (img_y * IMG_WIDTH + img_x) * CHANNELS;
-                        float alpha = bitmap[r * bw + c] / 255.0f;
-                        drawing_buffer[img_idx + 0] = (unsigned char)(drawing_buffer[img_idx + 0] * (1.0f - alpha));
-                        drawing_buffer[img_idx + 1] = (unsigned char)(drawing_buffer[img_idx + 1] * (1.0f - alpha));
-                        drawing_buffer[img_idx + 2] = (unsigned char)(drawing_buffer[img_idx + 2] * (1.0f - alpha));
+                        float alpha = bitmap[row * bw + c] / 255.0f;
+
+                        // Source-over: blend the glyph coverage towards the text colour
+                        drawing_buffer[img_idx + 0] = blend_channel(drawing_buffer[img_idx + 0], r, alpha);
+                        drawing_buffer[img_idx + 1] = blend_channel(drawing_buffer[img_idx + 1], g, alpha);
+                        drawing_buffer[img_idx + 2] = blend_channel(drawing_buffer[img_idx + 2], b, alpha);
                     }
                 }
             }

@@ -11,9 +11,12 @@ struct Textbox_Param
   char *text;
   Font *font;
   float font_size;
+  int r;
+  int g;
+  int b;
 };
 
-Object* Textbox_create(struct Textbox_Param *params);
+Object* Textbox_create(const struct Textbox_Param *params);
 void Textbox_destroy(Object* self);
 void Textbox_draw(Object* self);
 void Textbox_add(Object* self, Object* child);

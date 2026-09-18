@@ -4,6 +4,7 @@
 #include "Root.h"
 #include "stb_image_write.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 Image* Image_create(const char* filename, const int width, const int height,
@@ -17,7 +18,7 @@ Image* Image_create(const char* filename, const int width, const int height,
 
   if (self == 0) return 0;
 
-  self->buffer = (char*)malloc(width * height * CHANNELS);
+  self->buffer = (unsigned char*)malloc(width * height * CHANNELS);
 
   if (self->buffer == 0)
   {
@@ -83,4 +84,9 @@ void Image_generate(Image* self)
 {
   Object_draw(self->root.children);
   int status = stbi_write_png(self->name, self->width, self->height, CHANNELS, self->buffer, self->width * CHANNELS);
+
+  if (status == 0)
+  {
+    printf("Error: Failed to write %s\n", self->name);
+  }
 }

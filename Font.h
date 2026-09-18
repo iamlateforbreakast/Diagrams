@@ -9,7 +9,7 @@ struct Font_Param
 	char* name;
 };
 
-Font* Fontcreate(struct Font_Param* params);
+Font* Font_create(struct Font_Param* params);
 void Font_destroy(Font *self);
 void Font_get_bounding_box(Font* self, char* text, float size, int* w, int* h);
 void Font_calculate_baseline(Font* self, float size, int y, int* out_baseline, float* out_scale);

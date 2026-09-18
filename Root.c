@@ -26,6 +26,7 @@ Object* Root_create(const int* params)
 
 void Root_destroy(Object* self)
 {
+	(void)self;
 	//Object_destroy(self);
 }
 
@@ -34,6 +35,7 @@ void Root_draw(Object* self)
 	if (self->parent->type == ROOT_TYPE)
 	{
 		Image* image = (Image*)self->parent;
+		(void)image;
 		//draw_rectangle(image->buffer, image->height, x, y, w, h, r, g, b);
 	}
 	else

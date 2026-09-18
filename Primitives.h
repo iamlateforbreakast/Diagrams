@@ -8,6 +8,6 @@
 void draw_rectangle(Object *obj, int x, int y, int w, int h, int r, int g, int b);
 void draw_line(Object *obj, int x0, int y0, int x1, int y1, int r, int g, int b);
 void draw_line_thick(Object *obj, int x0, int y0, int x1, int y1, int weight, int r, int g, int b);
-void draw_text(Object* obj, Font* font, float size, int x0, int y0);
+void draw_text(Object* obj, Font* font, float size, int x, int y, const char* text, int r, int g, int b);
 
 #endif /* PRIMITIVES_H */

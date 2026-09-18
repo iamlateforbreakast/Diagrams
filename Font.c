@@ -20,31 +20,39 @@ Font* Font_create(struct Font_Param* params)
     self->name = params->name; // Assuming name is assigned from params
 
     FILE* font_file = fopen(self->name, "rb");
-    if (font_file)
-    {
-        // Get file size
-        fseek(font_file, 0, SEEK_END);
-        long size = ftell(font_file);
-        fseek(font_file, 0, SEEK_SET);
-
-        self->font_buffer = (unsigned char*)malloc(size);
-        if (self->font_buffer)
-        {
-            fread(self->font_buffer, 1, size, font_file);
-
-            // Initialize the font info
-            if (!stbtt_InitFont(&self->font_info, self->font_buffer, stbtt_GetFontOffsetForIndex(self->font_buffer, 0)))
-            {
-                fprintf(stderr, "Error: Failed to initialize font!\n");
-                free(self->font_buffer);
-            }
-        }
-        fclose(font_file);
-    }
-    else
+    if (font_file == 0)
     {
         fprintf(stderr, "Error: Failed to load font file: %s\n", self->name);
+        free(self);
+        return 0;
     }
+
+    // Get file size
+    fseek(font_file, 0, SEEK_END);
+    long size = ftell(font_file);
+    fseek(font_file, 0, SEEK_SET);
+
+    self->font_buffer = (unsigned char*)malloc(size);
+    if (self->font_buffer == 0)
+    {
+        fclose(font_file);
+        free(self);
+        return 0;
+    }
+
+    size_t read = fread(self->font_buffer, 1, size, font_file);
+    fclose(font_file);
+
+    // Initialize the font info
+    if ((read != (size_t)size) ||
+        !stbtt_InitFont(&self->font_info, self->font_buffer, stbtt_GetFontOffsetForIndex(self->font_buffer, 0)))
+    {
+        fprintf(stderr, "Error: Failed to initialize font!\n");
+        free(self->font_buffer);
+        free(self);
+        return 0;
+    }
+
     return self;
 }
 
