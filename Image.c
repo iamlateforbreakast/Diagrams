@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 Image* Image_create(const char* filename, const int width, const int height,
-    const int r, const int g, const int b)
+    Color background)
 {
   if (filename == 0) return 0;
 
@@ -26,12 +26,12 @@ Image* Image_create(const char* filename, const int width, const int height,
     return 0;
   }
 
-  /* Set background to r,g,b */
+  /* Set background colour */
   for (int i = 0; i < width * height; i++)
   {
-    self->buffer[i * CHANNELS] = r;
-    self->buffer[i * CHANNELS + 1] = g;
-    self->buffer[i * CHANNELS + 2] = b;
+    self->buffer[i * CHANNELS] = background.r;
+    self->buffer[i * CHANNELS + 1] = background.g;
+    self->buffer[i * CHANNELS + 2] = background.b;
   }
 
   self->name = filename;

@@ -2,6 +2,7 @@
 #define BOX_H
 
 #include "Object.h"
+#include "Color.h"
 
 struct Box_Param
 {
@@ -9,9 +10,7 @@ struct Box_Param
 	int y;
 	int w;
 	int h;
-	int r;
-	int g;
-	int b;
+	Color color;
 };
 
 Object* Box_create(const struct Box_Param *params);

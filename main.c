@@ -13,12 +13,8 @@ int main(void)
 	int error_status = FAILED;
 	int width = 640;
 	int height = 480;
-	int background_r = ARCTIC_SUNRISE_RARIFIED_AIR_R;
-	int background_g = ARCTIC_SUNRISE_RARIFIED_AIR_G;
-	int background_b = ARCTIC_SUNRISE_RARIFIED_AIR_B;
 
-	Image* image = Image_create("test.png", width, height,
-		background_r, background_g, background_b);
+	Image* image = Image_create("test.png", width, height, ARCTIC_SUNRISE_RARIFIED_AIR);
 
 	if (image == 0)
 	{
@@ -37,17 +33,13 @@ int main(void)
 
 	struct Box_Param box1_param = {
 		.x = 160, .y = 60, .w = 100, .h = 200,
-		.r = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_R,
-		.g = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_G,
-		.b = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_B
+		.color = ARCTIC_SUNRISE_AZURE_GREEN_BLUE
 	};
 
 	struct Textbox_Param textbox1_param = {
 		.x = 120, .y = 100, .text = "hello",
 		.font = font1, .font_size = 24.0f,
-		.r = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_R,
-		.g = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_G,
-		.b = ARCTIC_SUNRISE_AZURE_GREEN_BLUE_B
+		.color = ARCTIC_SUNRISE_AZURE_GREEN_BLUE
 	};
 
 	Object* box1 = Box_create(&box1_param);

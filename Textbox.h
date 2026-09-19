@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "Font.h"
+#include "Color.h"
 
 struct Textbox_Param
 {
@@ -11,9 +12,7 @@ struct Textbox_Param
   char *text;
   Font *font;
   float font_size;
-  int r;
-  int g;
-  int b;
+  Color color;
 };
 
 Object* Textbox_create(const struct Textbox_Param *params);

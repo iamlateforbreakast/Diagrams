@@ -2,9 +2,10 @@
 #include "Primitives.h"
 #include "Constants.h"
 #include "Object.h"
+#include "Color.h"
 // stb_truetype.h is intentionally removed to ensure isolation
 
-void draw_rectangle(Object* obj, int x, int y, int w, int h, int r, int g, int b) {
+void draw_rectangle(Object* obj, int x, int y, int w, int h, Color color) {
     if (w < 1) w = 1; // Ensure even 0-tick tasks show up as at least 1 pixel wide
 
     unsigned char* drawing_buffer = Object_getDrawingBuffer(obj);
@@ -17,15 +18,15 @@ void draw_rectangle(Object* obj, int x, int y, int w, int h, int r, int g, int b
             if (i >= 0 && i < buffer_height && j >= 0 && j < IMG_WIDTH)
             {
                 int idx = (i * IMG_WIDTH + j) * CHANNELS;
-                drawing_buffer[idx + 0] = r;
-                drawing_buffer[idx + 1] = g;
-                drawing_buffer[idx + 2] = b;
+                drawing_buffer[idx + 0] = color.r;
+                drawing_buffer[idx + 1] = color.g;
+                drawing_buffer[idx + 2] = color.b;
             }
         }
     }
 }
 
-void draw_line(Object* obj, int x0, int y0, int x1, int y1, int r, int g, int b) {
+void draw_line(Object* obj, int x0, int y0, int x1, int y1, Color color) {
 
     unsigned char* drawing_buffer = Object_getDrawingBuffer(obj);
     int buffer_height = Object_getBufferHeight(obj);
@@ -45,9 +46,9 @@ void draw_line(Object* obj, int x0, int y0, int x1, int y1, int r, int g, int b)
         if (x0 >= 0 && x0 < IMG_WIDTH && y0 >= 0 && y0 < buffer_height)
         {
             int idx = (y0 * IMG_WIDTH + x0) * CHANNELS;
-            drawing_buffer[idx + 0] = r;
-            drawing_buffer[idx + 1] = g;
-            drawing_buffer[idx + 2] = b;
+            drawing_buffer[idx + 0] = color.r;
+            drawing_buffer[idx + 1] = color.g;
+            drawing_buffer[idx + 2] = color.b;
         }
 
         // Check if we have reached the destination pixel
@@ -71,12 +72,7 @@ void draw_line(Object* obj, int x0, int y0, int x1, int y1, int r, int g, int b)
     }
 }
 
-static unsigned char blend_channel(unsigned char dst, int src, float alpha)
-{
-    return (unsigned char)(dst * (1.0f - alpha) + src * alpha + 0.5f);
-}
-
-void draw_text(Object* obj, Font* font, float size, int x, int y, const char* text, int r, int g, int b)
+void draw_text(Object* obj, Font* font, float size, int x, int y, const char* text, Color color)
 {
     unsigned char* drawing_buffer = Object_getDrawingBuffer(obj);
     int buffer_height = Object_getBufferHeight(obj);
@@ -112,9 +108,14 @@ void draw_text(Object* obj, Font* font, float size, int x, int y, const char* te
                         float alpha = bitmap[row * bw + c] / 255.0f;
 
                         // Source-over: blend the glyph coverage towards the text colour
-                        drawing_buffer[img_idx + 0] = blend_channel(drawing_buffer[img_idx + 0], r, alpha);
-                        drawing_buffer[img_idx + 1] = blend_channel(drawing_buffer[img_idx + 1], g, alpha);
-                        drawing_buffer[img_idx + 2] = blend_channel(drawing_buffer[img_idx + 2], b, alpha);
+                        Color dst = Color_make(drawing_buffer[img_idx + 0],
+                                                drawing_buffer[img_idx + 1],
+                                                drawing_buffer[img_idx + 2]);
+                        Color blended = Color_blend(dst, color, alpha);
+
+                        drawing_buffer[img_idx + 0] = blended.r;
+                        drawing_buffer[img_idx + 1] = blended.g;
+                        drawing_buffer[img_idx + 2] = blended.b;
                     }
                 }
             }

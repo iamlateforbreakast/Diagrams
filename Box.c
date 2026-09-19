@@ -44,11 +44,8 @@ void Box_draw(Object *self)
   int y = p->y;
   int w = p->w;
   int h = p->h;
-  int r = p->r;
-  int g = p->g;
-  int b = p->b;
 
-  draw_rectangle(self->parent, x, y, w, h, r, g, b);
+  draw_rectangle(self->parent, x, y, w, h, p->color);
 
   if (self->children!=0) Object_draw(self->children);
 

@@ -57,7 +57,7 @@ void Textbox_draw(Object* self)
     if (!p || !p->text || !p->font) return;
 
     // Fixed argument order to match Primitives.c
-    draw_text(self, p->font, p->font_size, p->x, p->y, p->text, p->r, p->g, p->b);
+    draw_text(self, p->font, p->font_size, p->x, p->y, p->text, p->color);
 }
 
 void Textbox_add(Object* self, Object* child)
